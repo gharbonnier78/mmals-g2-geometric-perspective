@@ -6,6 +6,34 @@
 
 PhD-level research package connecting Geometry-MMALS G1, MMALS Chronicle, inferred-context continual learning, RC2O/TPUT, safe conformal calibration, and Stable Flow Matching Dynamical Systems.
 
+# 📚 Documentation
+
+## Canonical specification (recommended)
+
+- 📘 **MMALS G2 – Geometric Perspective (Internal Governance Edition)**
+  - [`dist/MMALS_G2_Geometric_Perspective_v0.2_Internal_Governance_Addendum.pdf`](dist/MMALS_G2_Geometric_Perspective_v0.2_Internal_Governance_Addendum.pdf)
+
+This is the reference document for the v0.2 internal freeze.
+It includes:
+- the complete Geometric Perspective,
+- reviewer feedback integration,
+- claim-governance framework,
+- publication roadmap,
+- evidence gates (P0–P9 / R0–R9).
+
+---
+
+## Previous snapshots
+
+- 📄 `dist/MMALS_G2_Geometric_Perspective_v0.2_Internal.pdf`
+  - Internal snapshot before governance addendum.
+
+- 📄 `dist/MMALS_G2_Geometric_Perspective.pdf`
+  - Early working draft.
+
+- 📄 `dist/main.pdf`
+  - Raw LaTeX build artifact (not intended for direct reference).
+
 ## Build
 
 ```bash
