@@ -1,0 +1,8 @@
+[project]
+name = "mmals-g2"
+version = "0.1.0"
+description = "Reference objects for MMALS G2 admissible geometric adaptation"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

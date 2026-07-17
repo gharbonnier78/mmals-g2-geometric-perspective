@@ -1,0 +1,252 @@
+{
+  "manifest_version": "0.1.0",
+  "document": {
+    "title": "MMALS G2: A Geometric Perspective on Continual Functional Memory",
+    "version": "v0.2-internal",
+    "commit_hash": "REPLACE_WITH_ACTUAL_HASH",
+    "date": "2026-07-17",
+    "archive_status": "internal"
+  },
+
+  "estimators": [
+    {
+      "estimator_id": "EST-ALIGN-INTERVENTION",
+      "name": "Intervention estimator (route-function alignment)",
+      "target_quantity": "route-function alignment A_r,h",
+      "method": "SVD of functional deltas under input perturbation vs. route-logit perturbation subspace; principal-angle cosine",
+      "reference_oracle": "none yet -- requires controlled host-swap ground truth",
+      "calibration_split_id": null,
+      "qualification_split_id": null,
+      "qualification_status": "unqualified",
+      "selected_for_elegance_only": false,
+      "notes": "Candidate 1 of 3 in Section 5.1. Not yet compared against Jacobian or counterfactual-contribution estimators on a held-out qualification split."
+    },
+    {
+      "estimator_id": "EST-ALIGN-JACOBIAN",
+      "name": "Jacobian estimator (route-function alignment)",
+      "target_quantity": "route-function alignment A_r,h",
+      "method": "Dominant right-singular subspace comparison of router Jacobian and functional Jacobian",
+      "qualification_status": "unqualified",
+      "selected_for_elegance_only": false,
+      "notes": "Flagged in paper as computationally direct but potentially unstable and coordinate-sensitive -- expected to underperform on cross-seed stability test in Phase P3."
+    },
+    {
+      "estimator_id": "EST-ALIGN-COUNTERFACTUAL",
+      "name": "Counterfactual contribution estimator (route-function alignment)",
+      "target_quantity": "route-function alignment A_r,h",
+      "method": "Host-ablation loss delta correlated with route confidence via rank correlation",
+      "qualification_status": "unqualified",
+      "selected_for_elegance_only": false,
+      "notes": "Described as behaviourally grounded rather than geometrically pure. Candidate default if the geometric estimators fail cross-seed stability."
+    }
+  ],
+
+  "gates": [
+    {
+      "gate_id": "R0",
+      "name": "Reproducibility",
+      "criterion": "Clean build, seeded runs, immutable configs, artifact hashes.",
+      "metric": "build_reproducibility_pass",
+      "threshold_frozen": true,
+      "threshold_frozen_date": "2026-07-17",
+      "threshold_frozen_commit": "REPLACE_WITH_ACTUAL_HASH",
+      "status": "partial",
+      "consequence_if_failed": "No claim above 'established' may cite this codebase as evidence."
+    },
+    {
+      "gate_id": "R1",
+      "name": "Diagnostic validity",
+      "criterion": "Route regret and functional probes recover injected failures.",
+      "metric": "injected_failure_recovery_rate",
+      "threshold_frozen": false,
+      "status": "pending",
+      "consequence_if_failed": "Route-function alignment claims remain g2-candidate; no repair-trigger automation permitted."
+    },
+    {
+      "gate_id": "R2",
+      "name": "Estimator calibration",
+      "criterion": "Declared interval coverage and acceptable boundary bias.",
+      "metric": "empirical_coverage",
+      "threshold_frozen": false,
+      "status": "pending",
+      "evaluated_on_split_id": "SPLIT-CALIBRATION-01",
+      "consequence_if_failed": "Estimator demoted to advisory signal only, cannot feed a hard gate."
+    },
+    {
+      "gate_id": "R3",
+      "name": "Meta-calibration",
+      "criterion": "False admissibility and GateRegret below frozen thresholds.",
+      "metric": "FARgate",
+      "threshold_value": null,
+      "threshold_frozen": false,
+      "status": "pending",
+      "consequence_if_failed": "Permits soft advisory gate; forbids hard-admissibility claim (Section 16.4)."
+    },
+    {
+      "gate_id": "R4",
+      "name": "Failure separation",
+      "criterion": "Retention, routing, host drift, and CAL compensation are distinguishable.",
+      "metric": "failure_mode_confusion_matrix",
+      "threshold_frozen": false,
+      "status": "pending"
+    },
+    {
+      "gate_id": "R5",
+      "name": "Operational gain",
+      "criterion": "Better utility under matched accuracy, cost, memory, and latency budgets.",
+      "metric": "matched_budget_utility_delta",
+      "threshold_frozen": false,
+      "status": "pending",
+      "consequence_if_failed": "Permits publication as diagnostic study only, not as operational-control specification (Section 16.4)."
+    },
+    {
+      "gate_id": "R6",
+      "name": "Safety humility",
+      "criterion": "Hard claims restricted to validated scope; indeterminate and fallback paths tested.",
+      "metric": "indeterminate_path_test_coverage",
+      "threshold_frozen": false,
+      "status": "pending"
+    },
+    {
+      "gate_id": "R7",
+      "name": "Cross-stream robustness",
+      "criterion": "Repeated on natural and engineering streams across seeds.",
+      "metric": "cross_stream_replication_count",
+      "threshold_frozen": false,
+      "status": "pending"
+    },
+    {
+      "gate_id": "R8",
+      "name": "Audit completeness",
+      "criterion": "Every decision and claim reconstructable from Chronicle and evidence manifests.",
+      "metric": "reconstruction_success_rate",
+      "threshold_frozen": true,
+      "threshold_frozen_date": "2026-07-17",
+      "threshold_frozen_commit": "REPLACE_WITH_ACTUAL_HASH",
+      "status": "partial"
+    },
+    {
+      "gate_id": "R9",
+      "name": "External review readiness",
+      "criterion": "Geometry, CL, calibration, and systems reviewer issues closed.",
+      "metric": "open_reviewer_issue_count",
+      "threshold_frozen": false,
+      "status": "pending"
+    }
+  ],
+
+  "phases": [
+    {
+      "phase_id": "P0",
+      "name": "Repository and provenance freeze",
+      "status": "in-progress",
+      "depends_on_phases": [],
+      "uses_gates": ["R0", "R8"],
+      "produces_split_ids": [],
+      "consumes_split_ids": []
+    },
+    {
+      "phase_id": "P1",
+      "name": "G2-0 instrumentation",
+      "status": "not-started",
+      "depends_on_phases": ["P0"],
+      "uses_gates": ["R1"],
+      "produces_split_ids": ["SPLIT-DEV-01"],
+      "consumes_split_ids": []
+    },
+    {
+      "phase_id": "P2",
+      "name": "Estimator qualification",
+      "status": "not-started",
+      "depends_on_phases": ["P1"],
+      "uses_gates": ["R2"],
+      "produces_split_ids": ["SPLIT-CALIBRATION-01"],
+      "consumes_split_ids": ["SPLIT-DEV-01"]
+    },
+    {
+      "phase_id": "P3",
+      "name": "Route-function estimator study",
+      "status": "not-started",
+      "depends_on_phases": ["P2"],
+      "uses_gates": [],
+      "consumes_split_ids": ["SPLIT-DEV-01"],
+      "contamination_check": "P3 must select the winning estimator using SPLIT-DEV-01 only. SPLIT-CALIBRATION-01 (produced in P2) and the future SPLIT-QUALIFICATION-01 (P5) must remain untouched by this selection, or R2/R3 become circular per the open review note on this manifest."
+    },
+    {
+      "phase_id": "P5",
+      "name": "Meta-calibration gates",
+      "status": "not-started",
+      "depends_on_phases": ["P2", "P3", "P4"],
+      "uses_gates": ["R3"],
+      "produces_split_ids": ["SPLIT-QUALIFICATION-01"],
+      "consumes_split_ids": ["SPLIT-CALIBRATION-01"],
+      "contamination_check": "R3 thresholds (FARgate ceiling, GateRegret bound) must be frozen and recorded in gates[].threshold_value with threshold_frozen=true BEFORE this phase consumes SPLIT-QUALIFICATION-01. Currently unfrozen -- blocks P5 start."
+    }
+  ],
+
+  "claims": [
+    {
+      "claim_id": "CLAIM-001",
+      "text": "Geometric objects (distances, tangent directions, transport maps, admissible regions) can predict or improve continual-system behaviour under matched budgets.",
+      "location": { "section": "1" },
+      "status": "g2-candidate",
+      "depends_on_gates": ["R5", "R7"],
+      "depends_on_phases": ["P6", "P8"],
+      "falsification_test": "No geometric object outperforms matched-compute non-geometric baselines (replay, EWC, PNN, sparse MoE) on any tested endpoint in Phase P6/P8.",
+      "external_publication_eligible": false,
+      "last_updated": "2026-07-17"
+    },
+    {
+      "claim_id": "CLAIM-002",
+      "text": "The G1 evidence discipline (descriptive, predictive, causal, operational) is a necessary qualification ladder before geometric claims are admitted.",
+      "location": { "section": "1" },
+      "status": "established",
+      "depends_on_phases": [],
+      "external_publication_eligible": true,
+      "last_updated": "2026-07-17"
+    },
+    {
+      "claim_id": "CLAIM-003",
+      "text": "Route-function alignment A_r,h can be operationally estimated via intervention, Jacobian, or counterfactual-contribution methods, and a repair action requires agreement across behaviour, geometry, and stability diagnostics.",
+      "location": { "section": "5.1", "equation": "18-20" },
+      "status": "g2-candidate",
+      "depends_on_estimators": ["EST-ALIGN-INTERVENTION", "EST-ALIGN-JACOBIAN", "EST-ALIGN-COUNTERFACTUAL"],
+      "depends_on_gates": ["R1", "R2"],
+      "depends_on_phases": ["P3"],
+      "falsification_test": "None of the three estimators shows cross-seed stability or predicts future route regret better than a scalar confidence baseline (Phase P3 required tests).",
+      "external_publication_eligible": false,
+      "last_updated": "2026-07-17"
+    },
+    {
+      "claim_id": "CLAIM-004",
+      "text": "The admissibility projector must treat its own constraint estimates (retention, risk, cost, audit visibility) as uncertain, using LCB/UCB gating with an explicit indeterminate state rather than converting uncertainty into permission.",
+      "location": { "section": "7.1", "equation": "31-34" },
+      "status": "g2-candidate",
+      "depends_on_gates": ["R2", "R3"],
+      "depends_on_phases": ["P5"],
+      "falsification_test": "Gate estimators cannot maintain preregistered coverage on a qualification split untouched by model selection (Phase P5), or FARgate/GateRegret exceed frozen thresholds once those thresholds exist.",
+      "external_publication_eligible": false,
+      "last_updated": "2026-07-17"
+    },
+    {
+      "claim_id": "CLAIM-005",
+      "text": "A hard admissibility constraint (structural projection) is only justified when its input estimators can be estimated reliably and projection does not destroy learning.",
+      "location": { "section": "4", "equation": "11" },
+      "status": "deferred",
+      "depends_on_gates": ["R3", "R5"],
+      "depends_on_phases": ["P7"],
+      "falsification_test": "Not applicable while deferred -- claim is explicitly out of scope until R3 and the soft-admissibility benefit in P6 pass.",
+      "external_publication_eligible": false,
+      "last_updated": "2026-07-17"
+    },
+    {
+      "claim_id": "CLAIM-006",
+      "text": "Lie group / Grassmann-manifold route structure should only be introduced if it outperforms vector prototypes under equal compute and improves causal intervention specificity.",
+      "location": { "section": "9" },
+      "status": "deferred",
+      "depends_on_phases": ["P8", "P9"],
+      "external_publication_eligible": false,
+      "last_updated": "2026-07-17"
+    }
+  ]
+}

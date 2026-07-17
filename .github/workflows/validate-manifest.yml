@@ -1,0 +1,32 @@
+name: Validate claim manifest
+
+on:
+  push:
+    paths:
+      - '**/*.manifest.json'
+      - 'governance/schema/claim-manifest.schema.json'
+      - 'scripts/validate_manifest.py'
+  pull_request:
+    paths:
+      - '**/*.manifest.json'
+      - 'governance/schema/claim-manifest.schema.json'
+      - 'scripts/validate_manifest.py'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install jsonschema
+
+      - name: Run manifest CI gate
+        run: |
+          python3 scripts/validate_manifest.py \
+            --schema governance/schema/claim-manifest.schema.json \
+            $(find governance/manifests -name '*.manifest.json')

@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Internal archive record; not approved for external citation."
+title: "MMALS G2: A Geometric Perspective on Continual Functional Memory"
+version: 0.2-internal.0
+date-released: 2026-07-17
+authors:
+  - family-names: Harbonnier
+    given-names: Guillaume
+type: report
