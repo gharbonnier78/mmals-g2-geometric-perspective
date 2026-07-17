@@ -36,3 +36,20 @@ python3 scripts/validate_manifest.py \
 ## Interpretation
 
 A passing CI result means the evidence registry is internally consistent. It does not mean the scientific gates have passed. Most R1-R9 statuses remain pending by design.
+
+## Provenance-seal semantics
+
+The three commit fields in the frozen v0.2 manifest identify the immutable
+**content snapshot commit** immediately preceding the provenance-seal commit:
+
+`7bd82e88f1b4bd7bdc2f966d3ea6985877bd1bca`
+
+A Git commit cannot contain its own hash without a self-reference paradox.
+The archive therefore uses a two-commit seal:
+
+1. the content snapshot commit fixes the complete research tree;
+2. the provenance-seal commit replaces the three placeholders with the
+   content snapshot hash and changes nothing else of scientific substance.
+
+The final archive records the provenance-seal HEAD separately in
+`FREEZE_SEAL.txt` and includes a Git bundle containing both commits.
